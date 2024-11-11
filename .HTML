@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>chill and spill</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Wellness Journal</title>
+    <link rel="stylesheet" href="chill.css">
+
+    
+</head>
+<body>
+    <header>
+        <h1>Mental Wellness Journal</h1>
+        <p>Track your feelings, thoughts, and moods!</p>
+    </header>
+
+
+    <main>
+        <h2>Log Your Mood and Thoughts</h2>
+
+
+        <!-- Form to log mood and thoughts -->
+        <form id="moodForm">
+            <label for="mood">How are you feeling today?</label><br>
+            <input type="text" id="mood" name="mood" placeholder="Enter mood (e.g., happy, sad, stressed)" required><br><br>
+
+
+            <label for="thoughts">What are your thoughts for today?</label><br>
+            <textarea id="thoughts" name="thoughts" placeholder="Write about your day..." required></textarea><br><br>
+
+
+            <button type="submit">Log Entry</button>
+        </form>
+
+
+        <!-- Display saved entries -->
+        <div id="savedEntries">
+            <h2>Previous Entries</h2>
+            <div id="entriesContainer">
+                <!-- Entries will be dynamically added here -->
+            </div>
+        </div>
+
+
+        <!-- Navigation Links -->
+        <hr>
+        <a href="#moodTrends">View Mood Trends</a><br>
+    </main>
+
+
+    <footer>
+        <p>&copy; 2024 Mental Wellness Journal. All rights reserved.</p>
+    </footer>
+
+
+    <script>
+        const form = document.getElementById("moodForm");
+        const entriesContainer = document.getElementById("entriesContainer");
+
+
+        // Save entries to localStorage and update the page
+        function saveEntry(mood, thoughts) {
+            const entry = {
+                date: new Date().toLocaleDateString(),
+                mood: mood,
+                thoughts: thoughts
+            };
+
+
+            let entries = JSON.parse(localStorage.getItem('entries')) || [];
+            entries.push(entry);
+            localStorage.setItem('entries', JSON.stringify(entries));
+            displayEntries();
+        }
+
+
+        // Display all saved entries
+        function displayEntries() {
+            let entries = JSON.parse(localStorage.getItem('entries')) || [];
+            entriesContainer.innerHTML = '';
+
+
+            if (entries.length === 0) {
+                entriesContainer.innerHTML = '<p>No entries found. Start logging your moods!</p>';
+                return;
+            }
+
+
+            entries.forEach((entry, index) => {
+                const entryDiv = document.createElement('div');
+                entryDiv.classList.add('entry');
+                entryDiv.innerHTML = `
+                    <p><strong>Date:</strong> ${entry.date}</p>
+                    <p><strong>Mood:</strong> ${entry.mood}</p>
+                    <p><strong>Thoughts:</strong> ${entry.thoughts}</p>
+                    <hr>
+                `;
+                entriesContainer.appendChild(entryDiv);
+            });
+        }
+
+
+        // Handle form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+
+            const mood = document.getElementById("mood").value;
+            const thoughts = document.getElementById("thoughts").value;
+
+
+            saveEntry(mood, thoughts);
+
+
+            // Reset form
+            form.reset();
+        });
+
+
+        // Load entries on page load
+        window.onload = displayEntries;
+    </script>
+</body>
+</html>
